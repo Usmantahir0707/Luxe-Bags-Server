@@ -16,13 +16,29 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, "Password is required"],
+      required: function() {
+        return this.authProvider === 'local';
+      },
       minlength: 6,
     },
     role: {
       type: String,
       enum: ["customer", "admin"],
       default: "customer",
+    },
+    verified: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: String,
+    verificationTokenExpires: Date,
+    // Social login fields
+    googleId: String,
+    facebookId: String,
+    authProvider: {
+      type: String,
+      enum: ['local', 'google', 'facebook'],
+      default: 'local'
     },
   },
   { timestamps: true }

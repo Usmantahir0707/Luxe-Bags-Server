@@ -1,5 +1,6 @@
 import "./loadEnv.js";
 import "./config/cloudinary.js";
+import "./config/passport.js";
 
 import app from "./app.js";
 import connectDB from "./config/db.js";

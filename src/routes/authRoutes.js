@@ -1,4 +1,5 @@
 import express from "express";
+import passport from "passport";
 import {
   registerUser,
   loginUser,
@@ -7,7 +8,15 @@ import {
   deleteUser,
   getUsers,
   deleteUserByAdmin,
+  verifyEmail,
+  resendVerification,
 } from "../controllers/authController.js";
+import {
+  googleAuth,
+  facebookAuth,
+  googleAuthCallback,
+  facebookAuthCallback,
+} from "../controllers/socialAuthController.js";
 import { protect, admin } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
@@ -20,6 +29,24 @@ router.post("/login", loginUser);
 router.get("/me", protect, getCurrentUser);
 router.put("/me", protect, updateUser);
 router.delete("/me", protect, deleteUser);
+
+// Email verification routes
+router.post("/verify-email", verifyEmail);
+router.post("/resend-verification", resendVerification);
+
+// Social login routes
+router.get("/google", googleAuth);
+router.get(
+  "/google/callback",
+  passport.authenticate("google", { session: false }),
+  googleAuthCallback
+);
+router.get("/facebook", facebookAuth);
+router.get(
+  "/facebook/callback",
+  passport.authenticate("facebook", { session: false }),
+  facebookAuthCallback
+);
 
 // Admin routes
 router.get("/users", protect, admin, getUsers);

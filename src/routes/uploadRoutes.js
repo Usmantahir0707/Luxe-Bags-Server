@@ -1,6 +1,7 @@
 import express from "express";
 import multer from "multer";
 import { uploadImage } from "../controllers/uploadController.js";
+import adminAuth from "../middleware/adminAuth.js";
 
 const router = express.Router();
 
@@ -8,6 +9,6 @@ const router = express.Router();
 const storage = multer.diskStorage({});
 const upload = multer({ storage });
 
-router.post("/", upload.single("image"), uploadImage);
+router.post("/", adminAuth, upload.single("image"), uploadImage);
 
 export default router;

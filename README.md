@@ -1,21 +1,118 @@
 
-Luxe Bags API
+# Luxe Bags API
 
 This project is a Node.js backend server for the Luxe Bags e-commerce platform, built using Express and MongoDB. It provides a complete RESTful API for managing users, orders, products, and uploads, including both public endpoints (accessible by customers) and admin-only endpoints for store management.
 
 The API is designed to be modular and scalable, with separate routes, controllers, and models, making it easy to extend or integrate with any frontend application. All routes follow standard REST conventions, and protected routes use JWT authentication for secure access.
 
+## Features
+
+- ✅ User authentication with email verification
+- ✅ Password reset functionality
+- ✅ Social login (Google & Facebook) - *optional, server works without it*
+- ✅ Product management (CRUD operations)
+- ✅ Order management with status tracking
+- ✅ File uploads via Cloudinary
+- ✅ Admin panel functionality
+- ✅ Email notifications with beautiful templates
+
+## Setup Instructions
+
+### Prerequisites
+- Node.js (v18 or higher)
+- MongoDB Atlas account (or local MongoDB)
+- Gmail account (for email functionality)
+- Cloudinary account (for image uploads)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd luxe-bags-server
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Environment Variables**
+
+   Create a `.env` file in the root directory with the following variables:
+
+   ```env
+   # Database
+   MONGO_URI=mongodb+srv://your-mongodb-connection-string
+
+   # JWT Secret
+   JWT_SECRET=your-super-secret-jwt-key
+
+   # Cloudinary (for image uploads)
+   CLOUDINARY_CLOUD_NAME=your-cloudinary-cloud-name
+   CLOUDINARY_API_KEY=your-cloudinary-api-key
+   CLOUDINARY_API_SECRET=your-cloudinary-api-secret
+
+   # Email Configuration (for verification emails)
+   EMAIL_USER=your-gmail@gmail.com
+   EMAIL_PASS=your-gmail-app-password
+
+   # URLs
+   BACKEND_URL=https://your-backend-url.com
+   FRONTEND_URL=https://your-frontend-url.com
+
+   # Social Auth (Optional - server works without these)
+   GOOGLE_CLIENT_ID=your-google-client-id
+   GOOGLE_CLIENT_SECRET=your-google-client-secret
+   FACEBOOK_APP_ID=your-facebook-app-id
+   FACEBOOK_APP_SECRET=your-facebook-app-secret
+   ```
+
+4. **Start the server**
+   ```bash
+   # Development mode
+   npm run dev
+
+   # Production mode
+   npm start
+   ```
+
+### Email Setup
+
+The server uses Gmail to send verification and password reset emails. To set this up:
+
+1. Enable 2-Factor Authentication on your Gmail account
+2. Generate an App Password: Go to Google Account → Security → 2-Step Verification → App passwords
+3. Use this app password (not your regular password) for `EMAIL_PASS`
+
+### Social Authentication (Optional)
+
+To enable Google and Facebook login:
+
+1. **Google OAuth:**
+   - Go to [Google Cloud Console](https://console.cloud.google.com/)
+   - Create/select a project
+   - Enable Google+ API
+   - Create OAuth 2.0 credentials
+   - Add authorized redirect URI: `YOUR_BACKEND_URL/api/auth/google/callback`
+
+2. **Facebook OAuth:**
+   - Go to [Facebook Developers](https://developers.facebook.com/)
+   - Create an app
+   - Add Facebook Login product
+   - Add redirect URI: `YOUR_BACKEND_URL/api/auth/facebook/callback`
+
+## API Documentation
+
 This documentation provides a complete reference for all endpoints, including:
 
-HTTP method and URL
+- HTTP method and URL
+- Required headers
+- Example request bodies
+- Example responses
+- Access level (public, protected, or admin-only)
 
-Required headers
-
-Example request bodies
-
-Example responses
-
-Access level (public, protected, or admin-only)
+**Note:** Social login endpoints (Google/Facebook) will return 404 if credentials are not configured.
 
 
 
@@ -38,7 +135,37 @@ Body (JSON):
 }
 
 
-Response: Returns user object with JWT token
+Response: Returns user object with verification message (email sent)
+///////////////////////////////////////////////////////////////////////////////////////////
+Verify Email (Public) ****
+
+Method: POST
+
+URL: /api/auth/verify-email
+
+Body (JSON):
+
+{
+  "token": "verification_token_from_email"
+}
+
+
+Response: Returns verified user object with JWT token
+///////////////////////////////////////////////////////////////////////////////////////////
+Resend Verification Email (Public) ****
+
+Method: POST
+
+URL: /api/auth/resend-verification
+
+Body (JSON):
+
+{
+  "email": "john@example.com"
+}
+
+
+Response: Success message
 ///////////////////////////////////////////////////////////////////////////////////////////
 Login User (Public) ****
 
@@ -54,7 +181,39 @@ Body (JSON):
 }
 
 
-Response: Returns user object with JWT token
+Response: Returns user object with JWT token (requires email verification)
+///////////////////////////////////////////////////////////////////////////////////////////
+Google Login (Public) ****
+
+Method: GET
+
+URL: /api/auth/google
+
+Response: Redirects to Google OAuth
+///////////////////////////////////////////////////////////////////////////////////////////
+Google OAuth Callback (Internal) ****
+
+Method: GET
+
+URL: /api/auth/google/callback
+
+Response: Redirects to frontend with token
+///////////////////////////////////////////////////////////////////////////////////////////
+Facebook Login (Public) ****
+
+Method: GET
+
+URL: /api/auth/facebook
+
+Response: Redirects to Facebook OAuth
+///////////////////////////////////////////////////////////////////////////////////////////
+Facebook OAuth Callback (Internal) ****
+
+Method: GET
+
+URL: /api/auth/facebook/callback
+
+Response: Redirects to frontend with token
 ///////////////////////////////////////////////////////////////////////////////////////
 Get Current User (Protected) ****
 
