@@ -134,8 +134,16 @@ Body (JSON):
   "password": "secret123"
 }
 
+Response (JSON):
 
-Response: Returns user object with verification message (email sent)
+{
+  "_id": "64f0c3b2a1d4e12345abcd67",
+  "name": "John Doe",
+  "email": "john@example.com",
+  "role": "customer",
+  "verified": false,
+  "message": "Registration successful. Please check your email to verify your account."
+}
 ///////////////////////////////////////////////////////////////////////////////////////////
 Verify Email (Public) ****
 
@@ -149,8 +157,19 @@ Body (JSON):
   "token": "verification_token_from_email"
 }
 
+Response (JSON):
 
-Response: Returns verified user object with JWT token
+{
+  "message": "Email verified successfully",
+  "user": {
+    "_id": "64f0c3b2a1d4e12345abcd67",
+    "name": "John Doe",
+    "email": "john@example.com",
+    "role": "customer",
+    "verified": true,
+    "token": "jwt_token_here"
+  }
+}
 ///////////////////////////////////////////////////////////////////////////////////////////
 Resend Verification Email (Public) ****
 
@@ -164,8 +183,11 @@ Body (JSON):
   "email": "john@example.com"
 }
 
+Response (JSON):
 
-Response: Success message
+{
+  "message": "Verification email sent successfully"
+}
 ///////////////////////////////////////////////////////////////////////////////////////////
 Forgot Password (Public) ****
 
@@ -179,8 +201,11 @@ Body (JSON):
   "email": "john@example.com"
 }
 
+Response (JSON):
 
-Response: Success message (email sent with reset link)
+{
+  "message": "Password reset email sent successfully"
+}
 ///////////////////////////////////////////////////////////////////////////////////////////
 Reset Password (Public) ****
 
@@ -195,8 +220,11 @@ Body (JSON):
   "password": "newpassword123"
 }
 
+Response (JSON):
 
-Response: Success message
+{
+  "message": "Password reset successfully"
+}
 ///////////////////////////////////////////////////////////////////////////////////////////
 Login User (Public) ****
 
@@ -211,8 +239,16 @@ Body (JSON):
   "password": "secret123"
 }
 
+Response (JSON):
 
-Response: Returns user object with JWT token (requires email verification)
+{
+  "_id": "64f0c3b2a1d4e12345abcd67",
+  "name": "John Doe",
+  "email": "john@example.com",
+  "role": "customer",
+  "verified": true,
+  "token": "jwt_token_here"
+}
 ///////////////////////////////////////////////////////////////////////////////////////////
 Google Login (Public) ****
 
@@ -254,7 +290,14 @@ URL: /api/auth/me
 
 Headers: Authorization: Bearer <token>
 
-Response: Returns current logged-in user details
+Response (JSON):
+
+{
+  "_id": "64f0c3b2a1d4e12345abcd67",
+  "name": "John Doe",
+  "email": "john@example.com",
+  "role": "customer"
+}
 ///////////////////////////////////////////////////////////////////////////////////////
 Update Current User (Protected) ****
 
@@ -272,8 +315,14 @@ Body (JSON):
   "password": "newpassword123"
 }
 
+Response (JSON):
 
-Response: Returns updated user object
+{
+  "_id": "64f0c3b2a1d4e12345abcd67",
+  "name": "Updated Name",
+  "email": "newemail@example.com",
+  "role": "customer"
+}
 ///////////////////////////////////////////////////////////////////////////////////////
 Delete Current User (Protected) ****
 
@@ -283,7 +332,11 @@ URL: /api/auth/me
 
 Headers: Authorization: Bearer <token>
 
-Response: Confirmation of deletion
+Response (JSON):
+
+{
+  "message": "User deleted successfully"
+}
 ///////////////////////////////////////////////////////////////////////////////////////
 Get All Users (Admin Only) ****
 
@@ -293,7 +346,24 @@ URL: /api/auth/users
 
 Headers: Authorization: Bearer <admin-token>
 
-Response: Returns all users (excluding passwords)
+Response (JSON):
+
+[
+  {
+    "_id": "64f0c3b2a1d4e12345abcd67",
+    "name": "John Doe",
+    "email": "john@example.com",
+    "role": "customer",
+    "verified": true
+  },
+  {
+    "_id": "64f0c3b2a1d4e12345abcd68",
+    "name": "Jane Smith",
+    "email": "jane@example.com",
+    "role": "admin",
+    "verified": true
+  }
+]
 ///////////////////////////////////////////////////////////////////////////////////////
 Delete Any User (Admin Only) ****
 
@@ -303,7 +373,11 @@ URL: /api/auth/users/:id
 
 Headers: Authorization: Bearer <admin-token>
 
-Response: Confirmation of deletion
+Response (JSON):
+
+{
+  "message": "User deleted successfully"
+}
 ///////////////////////////////////////////////////////////////////////////////////////
 Order Routes
 Create Order (Public) ****
@@ -335,8 +409,31 @@ Body (JSON):
   "totalPrice": 199.99
 }
 
+Response (JSON):
 
-Response: Returns created order object
+{
+  "_id": "64f0c3b2a1d4e12345abcd69",
+  "customerName": "John Doe",
+  "customerEmail": "john@example.com",
+  "customerPhone": "+1234567890",
+  "shippingAddress": {
+    "address": "123 Main Street",
+    "city": "Springfield",
+    "postalCode": "12345",
+    "country": "USA"
+  },
+  "products": [
+    {
+      "productId": "64f0c3b2a1d4e12345abcd68",
+      "quantity": 2,
+      "color": "red",
+      "size": "M"
+    }
+  ],
+  "totalPrice": 199.99,
+  "status": "pending",
+  "createdAt": "2024-01-03T07:13:52.000Z"
+}
 ///////////////////////////////////////////////////////////////////////////////////////
 Cancel Order (Customer, Public) ****
 
@@ -348,7 +445,15 @@ Headers: Authorization: optional if logged-in
 
 Body: None
 
-Response: Updated order with status cancelled
+Response (JSON):
+
+{
+  "_id": "64f0c3b2a1d4e12345abcd69",
+  "customerName": "John Doe",
+  "customerEmail": "john@example.com",
+  "status": "cancelled",
+  "updatedAt": "2024-01-03T07:13:52.000Z"
+}
 ///////////////////////////////////////////////////////////////////////////////////////
 Get Order by ID (Public) ****
 
@@ -356,7 +461,32 @@ Method: GET
 
 URL: /api/orders/:id
 
-Response: Returns order details
+Response (JSON):
+
+{
+  "_id": "64f0c3b2a1d4e12345abcd69",
+  "customerName": "John Doe",
+  "customerEmail": "john@example.com",
+  "customerPhone": "+1234567890",
+  "shippingAddress": {
+    "address": "123 Main Street",
+    "city": "Springfield",
+    "postalCode": "12345",
+    "country": "USA"
+  },
+  "products": [
+    {
+      "productId": "64f0c3b2a1d4e12345abcd68",
+      "quantity": 2,
+      "color": "red",
+      "size": "M"
+    }
+  ],
+  "totalPrice": 199.99,
+  "status": "pending",
+  "createdAt": "2024-01-03T07:13:52.000Z",
+  "updatedAt": "2024-01-03T07:13:52.000Z"
+}
 ///////////////////////////////////////////////////////////////////////////////////////
 Get All Orders (Admin Only) ****
 
@@ -366,7 +496,18 @@ URL: /api/orders
 
 Headers: Authorization: Bearer <admin-token>
 
-Response: Returns all orders
+Response (JSON):
+
+[
+  {
+    "_id": "64f0c3b2a1d4e12345abcd69",
+    "customerName": "John Doe",
+    "customerEmail": "john@example.com",
+    "totalPrice": 199.99,
+    "status": "pending",
+    "createdAt": "2024-01-03T07:13:52.000Z"
+  }
+]
 ///////////////////////////////////////////////////////////////////////////////////////
 Cancel Any Order (Admin Only) ****
 
@@ -376,7 +517,14 @@ URL: /api/orders/:id/admin-cancel
 
 Headers: Authorization: Bearer <admin-token>
 
-Response: Updated order with status cancelled
+Response (JSON):
+
+{
+  "_id": "64f0c3b2a1d4e12345abcd69",
+  "customerName": "John Doe",
+  "status": "cancelled",
+  "updatedAt": "2024-01-03T07:13:52.000Z"
+}
 ///////////////////////////////////////////////////////////////////////////////////////
 Update Order Status (Admin Only) ****
 
@@ -392,8 +540,14 @@ Body (JSON):
   "status": "shipped"
 }
 
+Response (JSON):
 
-Response: Updated order with new status
+{
+  "_id": "64f0c3b2a1d4e12345abcd69",
+  "customerName": "John Doe",
+  "status": "shipped",
+  "updatedAt": "2024-01-03T07:13:52.000Z"
+}
 ///////////////////////////////////////////////////////////////////////////////////////
 Product Routes
 Create Product (Admin Only) ****
@@ -418,8 +572,21 @@ Body (JSON):
   "isFeatured": true
 }
 
+Response (JSON):
 
-Response: Returns created product object
+{
+  "_id": "64f0c3b2a1d4e12345abcd70",
+  "name": "Elegant Bag",
+  "description": "Leather ladies bag",
+  "price": 149.99,
+  "category": "Ladies Bag",
+  "image": "https://cloudinary.com/image-url",
+  "stock": 10,
+  "colors": ["red", "black"],
+  "sizes": ["S", "M", "L"],
+  "isFeatured": true,
+  "createdAt": "2024-01-03T07:14:07.000Z"
+}
 ///////////////////////////////////////////////////////////////////////////////////////
 Get All Products (Public) ****
 
@@ -427,7 +594,23 @@ Method: GET
 
 URL: /api/products
 
-Response: Returns list of products
+Response (JSON):
+
+[
+  {
+    "_id": "64f0c3b2a1d4e12345abcd70",
+    "name": "Elegant Bag",
+    "description": "Leather ladies bag",
+    "price": 149.99,
+    "category": "Ladies Bag",
+    "image": "https://cloudinary.com/image-url",
+    "stock": 10,
+    "colors": ["red", "black"],
+    "sizes": ["S", "M", "L"],
+    "isFeatured": true,
+    "createdAt": "2024-01-03T07:14:07.000Z"
+  }
+]
 ///////////////////////////////////////////////////////////////////////////////////////
 Get Single Product (Public) ****
 
@@ -435,7 +618,22 @@ Method: GET
 
 URL: /api/products/:id
 
-Response: Returns single product details
+Response (JSON):
+
+{
+  "_id": "64f0c3b2a1d4e12345abcd70",
+  "name": "Elegant Bag",
+  "description": "Leather ladies bag",
+  "price": 149.99,
+  "category": "Ladies Bag",
+  "image": "https://cloudinary.com/image-url",
+  "stock": 10,
+  "colors": ["red", "black"],
+  "sizes": ["S", "M", "L"],
+  "isFeatured": true,
+  "createdAt": "2024-01-03T07:14:07.000Z",
+  "updatedAt": "2024-01-03T07:14:07.000Z"
+}
 ///////////////////////////////////////////////////////////////////////////////////////
 Update Product (Admin Only) ****
 
@@ -452,8 +650,21 @@ Body (JSON):
   "price": 199.99
 }
 
+Response (JSON):
 
-Response: Returns updated product
+{
+  "_id": "64f0c3b2a1d4e12345abcd70",
+  "name": "Updated Product Name",
+  "description": "Leather ladies bag",
+  "price": 199.99,
+  "category": "Ladies Bag",
+  "image": "https://cloudinary.com/image-url",
+  "stock": 10,
+  "colors": ["red", "black"],
+  "sizes": ["S", "M", "L"],
+  "isFeatured": true,
+  "updatedAt": "2024-01-03T07:14:07.000Z"
+}
 ///////////////////////////////////////////////////////////////////////////////////////
 Delete Product (Admin Only) ****
 
@@ -463,7 +674,11 @@ URL: /api/products/:id
 
 Headers: Authorization: Bearer <admin-token>
 
-Response: Confirmation of deletion
+Response (JSON):
+
+{
+  "message": "Product deleted successfully"
+}
 ///////////////////////////////////////////////////////////////////////////////////////
 Upload Routes
 Upload Image (Admin Only) ****
@@ -476,4 +691,9 @@ Headers: Authorization: Bearer <admin-token>
 
 Body (form-data): Key = image, Value = file
 
-Response: Returns uploaded image URL and public_id
+Response (JSON):
+
+{
+  "url": "https://cloudinary.com/uploaded-image-url",
+  "public_id": "luxebags/product_image_12345"
+}
