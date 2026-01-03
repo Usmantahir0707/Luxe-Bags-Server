@@ -32,6 +32,8 @@ const userSchema = new mongoose.Schema(
     },
     verificationToken: String,
     verificationTokenExpires: Date,
+    resetToken: String,
+    resetTokenExpires: Date,
     // Social login fields
     googleId: String,
     facebookId: String,

@@ -167,6 +167,37 @@ Body (JSON):
 
 Response: Success message
 ///////////////////////////////////////////////////////////////////////////////////////////
+Forgot Password (Public) ****
+
+Method: POST
+
+URL: /api/auth/forgot-password
+
+Body (JSON):
+
+{
+  "email": "john@example.com"
+}
+
+
+Response: Success message (email sent with reset link)
+///////////////////////////////////////////////////////////////////////////////////////////
+Reset Password (Public) ****
+
+Method: POST
+
+URL: /api/auth/reset-password
+
+Body (JSON):
+
+{
+  "token": "reset_token_from_email",
+  "password": "newpassword123"
+}
+
+
+Response: Success message
+///////////////////////////////////////////////////////////////////////////////////////////
 Login User (Public) ****
 
 Method: POST

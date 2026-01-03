@@ -10,6 +10,8 @@ import {
   deleteUserByAdmin,
   verifyEmail,
   resendVerification,
+  forgotPassword,
+  resetPassword,
 } from "../controllers/authController.js";
 import {
   googleAuth,
@@ -33,6 +35,10 @@ router.delete("/me", protect, deleteUser);
 // Email verification routes
 router.post("/verify-email", verifyEmail);
 router.post("/resend-verification", resendVerification);
+
+// Password reset routes
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password", resetPassword);
 
 // Social login routes
 router.get("/google", googleAuth);
