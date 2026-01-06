@@ -613,7 +613,7 @@ Headers: Authorization: Bearer <admin-token>
 Body (JSON):
 
 {
-  "status": "shipped"
+  "status": "delivered"
 }
 
 Response (JSON):
@@ -621,31 +621,11 @@ Response (JSON):
 {
   "_id": "64f0c3b2a1d4e12345abcd69",
   "customerName": "John Doe",
-  "status": "shipped",
+  "status": "delivered",
   "updatedAt": "2024-01-03T07:13:52.000Z"
 }
-///////////////////////////////////////////////////////////////////////////////////////
-Send Order Confirmation Email (Admin Only) ****
 
-Method: POST
-
-URL: /api/orders/send-confirmation
-
-Headers: Authorization: Bearer <admin-token>
-
-Body (JSON):
-
-{
-  "orderId": "64f0c3b2a1d4e12345abcd69"
-}
-
-Response (JSON):
-
-{
-  "message": "Order confirmation email sent successfully",
-  "orderId": "64f0c3b2a1d4e12345abcd69",
-  "customerEmail": "john@example.com"
-}
+**Note:** When an order is created and confirmed (status: "pending"), an order confirmation email is automatically sent to the customer.
 ///////////////////////////////////////////////////////////////////////////////////////
 Product Routes
 Create Product (Admin Only) ****

@@ -6,7 +6,6 @@ import {
   getAllOrders,
   cancelOrderByAdmin,
   updateOrderStatus,
-  sendOrderConfirmation,
 } from "../controllers/orderController.js";
 
 import adminAuth from "../middleware/adminAuth.js";
@@ -30,8 +29,5 @@ router.put("/:id/admin-cancel", adminAuth, cancelOrderByAdmin);
 
 // Admin: Update status
 router.put("/:id/status", adminAuth, updateOrderStatus);
-
-// Admin: Send order confirmation email
-router.post("/send-confirmation", adminAuth, sendOrderConfirmation);
 
 export default router;
