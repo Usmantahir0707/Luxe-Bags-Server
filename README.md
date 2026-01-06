@@ -23,6 +23,7 @@ The API is designed to be modular and scalable, with separate routes, controller
 - MongoDB Atlas account (or local MongoDB)
 - Gmail account (for email functionality)
 - Cloudinary account (for image uploads)
+- Twilio account (for WhatsApp messaging)
 
 ### Installation
 
@@ -66,6 +67,11 @@ The API is designed to be modular and scalable, with separate routes, controller
    GOOGLE_CLIENT_SECRET=your-google-client-secret
    FACEBOOK_APP_ID=your-facebook-app-id
    FACEBOOK_APP_SECRET=your-facebook-app-secret
+
+   # WhatsApp Configuration (Twilio)
+   TWILIO_ACCOUNT_SID=your-twilio-account-sid
+   TWILIO_AUTH_TOKEN=your-twilio-auth-token
+   TWILIO_WHATSAPP_NUMBER=your-twilio-whatsapp-number
    ```
 
 4. **Start the server**
@@ -84,6 +90,35 @@ The server uses Gmail to send verification and password reset emails. To set thi
 1. Enable 2-Factor Authentication on your Gmail account
 2. Generate an App Password: Go to Google Account → Security → 2-Step Verification → App passwords
 3. Use this app password (not your regular password) for `EMAIL_PASS`
+
+### WhatsApp Setup (Twilio)
+
+The server uses Twilio to send and receive WhatsApp messages. To set this up:
+
+1. **Create a Twilio Account:**
+   - Sign up at [Twilio](https://www.twilio.com/)
+   - Verify your account with a phone number
+
+2. **Get WhatsApp Enabled:**
+   - In your Twilio Console, go to Messaging → Settings → WhatsApp
+   - Follow the instructions to enable WhatsApp
+
+3. **Get Your Credentials:**
+   - Account SID: Found in your Twilio Console Dashboard
+   - Auth Token: Found in your Twilio Console Dashboard
+   - WhatsApp Number: The WhatsApp-enabled number provided by Twilio (starts with whatsapp:)
+
+4. **Configure Webhook:**
+   - In Twilio Console, go to Messaging → Settings → WhatsApp
+   - Set the webhook URL to: `YOUR_BACKEND_URL/api/whatsapp/receive`
+   - Method: HTTP POST
+
+5. **Add Environment Variables:**
+   - `TWILIO_ACCOUNT_SID`: Your Twilio Account SID
+   - `TWILIO_AUTH_TOKEN`: Your Twilio Auth Token
+   - `TWILIO_WHATSAPP_NUMBER`: Your WhatsApp-enabled Twilio number (without whatsapp: prefix)
+
+**Note:** For production, enable request validation in the webhook settings for security.
 
 ### Social Authentication (Optional)
 
@@ -356,13 +391,54 @@ Response (JSON):
     "role": "customer",
     "verified": true
   },
-  {
-    "_id": "64f0c3b2a1d4e12345abcd68",
-    "name": "Jane Smith",
-    "email": "jane@example.com",
-    "role": "admin",
-    "verified": true
-  }
+{
+
+  "url": "https://cloudinary.com/uploaded-image-url",
+
+  "public_id": "luxebags/product_image_12345"
+
+}
+///////////////////////////////////////////////////////////////////////////////////////
+WhatsApp Routes
+Receive Message (Public Webhook) ****
+
+Method: POST
+
+URL: /api/whatsapp/receive
+
+Headers: Content-Type: application/x-www-form-urlencoded (Twilio webhook format)
+
+Body (Form-encoded - example from Twilio):
+
+From=whatsapp%3A%2B1234567890&To=whatsapp%3A%2B9876543210&Body=Hello%2C+I+have+a+question+about+my+order.&MessageSid=SM1234567890
+
+Response: TwiML XML (empty response indicates successful processing)
+
+<?xml version="1.0" encoding="UTF-8"?>
+<Response></Response>
+///////////////////////////////////////////////////////////////////////////////////////
+Send Message (Admin Only) ****
+
+Method: POST
+
+URL: /api/whatsapp/send
+
+Headers: Authorization: Bearer <admin-token>
+
+Body (JSON):
+
+{
+  "to": "+1234567890",
+  "message": "Your order has been completed and is ready for pickup!"
+}
+
+Response (JSON):
+
+{
+  "messageId": "wamid.abc123def456",
+  "status": "sent",
+  "message": "Message sent successfully"
+}
 ]
 ///////////////////////////////////////////////////////////////////////////////////////
 Delete Any User (Admin Only) ****
@@ -547,6 +623,28 @@ Response (JSON):
   "customerName": "John Doe",
   "status": "shipped",
   "updatedAt": "2024-01-03T07:13:52.000Z"
+}
+///////////////////////////////////////////////////////////////////////////////////////
+Send Order Confirmation Email (Admin Only) ****
+
+Method: POST
+
+URL: /api/orders/send-confirmation
+
+Headers: Authorization: Bearer <admin-token>
+
+Body (JSON):
+
+{
+  "orderId": "64f0c3b2a1d4e12345abcd69"
+}
+
+Response (JSON):
+
+{
+  "message": "Order confirmation email sent successfully",
+  "orderId": "64f0c3b2a1d4e12345abcd69",
+  "customerEmail": "john@example.com"
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 Product Routes

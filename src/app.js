@@ -7,6 +7,7 @@ import authRoutes from "./routes/authRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
+import whatsappRoutes from "./routes/whatsappRoutes.js";
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/whatsapp", whatsappRoutes);
 app.get("/", (req, res) => {
   res.send("API running...");
 });

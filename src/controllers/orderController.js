@@ -1,4 +1,6 @@
 import Order from "../models/Order.js";
+import Product from "../models/Product.js";
+import { sendOrderConfirmationEmail } from "../utils/emailService.js";
 
 // ---------------------------------------------------------
 // PUBLIC: Create Order
@@ -140,5 +142,42 @@ export const updateOrderStatus = async (req, res) => {
     res.json({ message: "Order status updated", order });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+// ---------------------------------------------------------
+// ADMIN: Send Order Confirmation Email
+// ---------------------------------------------------------
+// This endpoint allows admins to send order confirmation emails to customers
+export const sendOrderConfirmation = async (req, res) => {
+  try {
+    const { orderId } = req.body;
+
+    if (!orderId) {
+      return res.status(400).json({ message: 'Order ID is required' });
+    }
+
+    // Find the order and populate product details
+    const order = await Order.findById(orderId).populate('products.product');
+
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    // Send the confirmation email
+    await sendOrderConfirmationEmail(order);
+
+    res.status(200).json({
+      message: 'Order confirmation email sent successfully',
+      orderId: order._id,
+      customerEmail: order.customerEmail
+    });
+
+  } catch (error) {
+    console.error('Error sending order confirmation:', error);
+    res.status(500).json({
+      message: 'Failed to send order confirmation email',
+      error: error.message
+    });
   }
 };
