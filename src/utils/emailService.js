@@ -258,7 +258,7 @@ export const sendOrderConfirmationEmail = async (order) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: customerEmail,
-    subject: `Order Confirmation - Order #${orderId.toString().slice(-8).toUpperCase()}`,
+    subject: `Order Confirmation - Order #${orderId.toString()}`,
     html: `
       <!DOCTYPE html>
       <html>
@@ -309,7 +309,7 @@ export const sendOrderConfirmationEmail = async (order) => {
 
                       <div style="margin-bottom: 15px;">
                         <strong style="color: #4a5568;">Order ID:</strong>
-                        <span style="color: #667eea; font-weight: 600;">#${orderId.toString().slice(-8).toUpperCase()}</span>
+                        <span style="color: #667eea; font-weight: 600;">${orderId.toString()}</span>
                       </div>
 
                       <div style="margin-bottom: 15px;">
