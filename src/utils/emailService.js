@@ -30,11 +30,11 @@ export const sendVerificationEmail = async (email, token) => {
               <table cellpadding="0" cellspacing="0" border="0" width="600" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden;">
                 <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 30px; text-align: center;">
-                    <h1 style="color: #ffffff; font-size: 28px; font-weight: 700; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                  <td style="background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%); padding: 40px 30px; text-align: center; border-bottom: 3px solid #e53e3e;">
+                    <h1 style="color: #ffffff; font-size: 32px; font-weight: 800; margin: 0; letter-spacing: 2px; text-transform: uppercase;">
                       LUXE BAGS
                     </h1>
-                    <p style="color: #e8eaf6; font-size: 16px; margin: 8px 0 0 0; opacity: 0.9;">
+                    <p style="color: #cbd5e0; font-size: 18px; margin: 10px 0 0 0; font-weight: 300; letter-spacing: 1px;">
                       Where Luxury Meets Elegance
                     </p>
                   </td>
@@ -141,11 +141,11 @@ export const sendPasswordResetEmail = async (email, resetToken) => {
               <table cellpadding="0" cellspacing="0" border="0" width="600" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden;">
                 <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 30px; text-align: center;">
-                    <h1 style="color: #ffffff; font-size: 28px; font-weight: 700; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                  <td style="background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%); padding: 40px 30px; text-align: center; border-bottom: 3px solid #e53e3e;">
+                    <h1 style="color: #ffffff; font-size: 32px; font-weight: 800; margin: 0; letter-spacing: 2px; text-transform: uppercase;">
                       LUXE BAGS
                     </h1>
-                    <p style="color: #e8eaf6; font-size: 16px; margin: 8px 0 0 0; opacity: 0.9;">
+                    <p style="color: #cbd5e0; font-size: 18px; margin: 10px 0 0 0; font-weight: 300; letter-spacing: 1px;">
                       Where Luxury Meets Elegance
                     </p>
                   </td>
@@ -240,16 +240,18 @@ export const sendPasswordResetEmail = async (email, resetToken) => {
 export const sendOrderConfirmationEmail = async (order) => {
   const { customerEmail, customerName, _id: orderId, products, totalPrice, shippingAddress, createdAt } = order;
 
-  // Format products for display
+  // Format products for display with better styling
   const productRows = products.map(item => `
     <tr>
-      <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: left;">
-        <div style="font-weight: 600; color: #2d3748;">${item.product?.name || 'Product'}</div>
-        <div style="font-size: 14px; color: #718096;">
-          ${item.color ? `Color: ${item.color}` : ''} ${item.size ? `Size: ${item.size}` : ''} Quantity: ${item.quantity}
+      <td style="padding: 15px 12px; border-bottom: 1px solid #e2e8f0; text-align: left; vertical-align: top;">
+        <div style="font-weight: 700; color: #1a202c; font-size: 16px; margin-bottom: 5px;">${item.product?.name || 'Product'}</div>
+        <div style="font-size: 14px; color: #4a5568; line-height: 1.4;">
+          ${item.color ? `<span style="display: inline-block; margin-right: 15px;"><strong>Color:</strong> ${item.color}</span>` : ''}
+          ${item.size ? `<span style="display: inline-block; margin-right: 15px;"><strong>Size:</strong> ${item.size}</span>` : ''}
+          <span style="display: inline-block;"><strong>Qty:</strong> ${item.quantity}</span>
         </div>
       </td>
-      <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: right; font-weight: 600; color: #2d3748;">
+      <td style="padding: 15px 12px; border-bottom: 1px solid #e2e8f0; text-align: right; font-weight: 700; color: #1a202c; font-size: 16px; vertical-align: top;">
         $${(item.product?.price * item.quantity || 0).toFixed(2)}
       </td>
     </tr>
@@ -274,11 +276,11 @@ export const sendOrderConfirmationEmail = async (order) => {
               <table cellpadding="0" cellspacing="0" border="0" width="600" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden;">
                 <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 30px; text-align: center;">
-                    <h1 style="color: #ffffff; font-size: 28px; font-weight: 700; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                  <td style="background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%); padding: 40px 30px; text-align: center; border-bottom: 3px solid #e53e3e;">
+                    <h1 style="color: #ffffff; font-size: 32px; font-weight: 800; margin: 0; letter-spacing: 2px; text-transform: uppercase;">
                       LUXE BAGS
                     </h1>
-                    <p style="color: #e8eaf6; font-size: 16px; margin: 8px 0 0 0; opacity: 0.9;">
+                    <p style="color: #cbd5e0; font-size: 18px; margin: 10px 0 0 0; font-weight: 300; letter-spacing: 1px;">
                       Where Luxury Meets Elegance
                     </p>
                   </td>

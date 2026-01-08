@@ -42,9 +42,12 @@ export const createOrder = async (req, res) => {
       totalPrice,
     });
 
+    // Populate product details for the email
+    const populatedOrder = await Order.findById(order._id).populate('products.product');
+
     // Send order confirmation email after successful order creation
     try {
-      await sendOrderConfirmationEmail(order);
+      await sendOrderConfirmationEmail(populatedOrder);
       console.log(`Order confirmation email sent for order ${order._id}`);
     } catch (emailError) {
       console.error('Failed to send order confirmation email:', emailError);
